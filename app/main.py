@@ -1,25 +1,13 @@
+import os
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from app import routes, models  
-from app.database import engine
+from app import routes, models  # ✅ Correct Import Path
+from app.database import engine  # ✅ Correct Import Path
 
-# ✅ सबसे पहले FastAPI app define करो
-app = FastAPI()
-
-# ✅ अब middleware add करो
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # सभी origins को allow कर रहा है
-    allow_credentials=True,
-    allow_methods=["*"],  # सभी HTTP methods को allow कर रहा है
-    allow_headers=["*"],  # सभी headers को allow कर रहा है
-)
-
-# ✅ Database Tables Create करो
-print(f"Database Engine: {engine}")
+# Ensure that models.Base is correctly imported
 models.Base.metadata.create_all(bind=engine)
 
-# ✅ Routes include करो
+# Initialize FastAPI app
+app = FastAPI()
+
+# Include router from routes
 app.include_router(routes.router)
-
-
