@@ -9,5 +9,5 @@ models.Base.metadata.create_all(bind=engine)
 # Initialize FastAPI app
 app = FastAPI()
 
-# Include router from routes
+
 app.include_router(routes.router)
