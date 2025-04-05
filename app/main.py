@@ -11,3 +11,6 @@ app = FastAPI()
 
 
 app.include_router(routes.router)
+@app.get("/")
+def read_root():
+    return {"message": "ZenifyAI Backend is Live!"}
