@@ -3,11 +3,12 @@ from sqlalchemy.orm import Session
 from . import models, schemas, utils
 from .database import get_db
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from pydantic import BaseModel  # ✅ For chat schema
 
 router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-# ✅ User Registration Route (Fixed & Improved Error Handling)
+# ✅ User Registration
 @router.post("/register", response_model=schemas.UserResponse)
 def register_user(user: schemas.UserSchema, db: Session = Depends(get_db)):
     try:
@@ -27,7 +28,7 @@ def register_user(user: schemas.UserSchema, db: Session = Depends(get_db)):
         db.rollback()
         raise HTTPException(status_code=500, detail=f"Server error: {str(e)}")
 
-#  User Login Route (Fixed & Debugging Added)
+# ✅ User Login
 @router.post("/token")
 def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     try:
@@ -46,7 +47,7 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db:
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Server error: {str(e)}")
 
-#  Get User Route (Fixed & Improved)
+# ✅ Get User
 @router.get("/user/{user_id}", response_model=schemas.UserResponse)
 def get_user(user_id: int, db: Session = Depends(get_db)):
     try:
@@ -58,4 +59,19 @@ def get_user(user_id: int, db: Session = Depends(get_db)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Server error: {str(e)}")
 
+# ✅ ZenifyAI Chat Endpoint
+class ChatRequest(BaseModel):
+    message: str
 
+def generate_ai_response(message: str) -> str:
+    # Replace with real AI logic later (like OpenAI, etc.)
+    return f"You said: {message}"
+
+@router.post("/chat")
+def chat(request: ChatRequest):
+    try:
+        user_message = request.message
+        response = generate_ai_response(user_message)
+        return {"response": response}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Server error: {str(e)}")
