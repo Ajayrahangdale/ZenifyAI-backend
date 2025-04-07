@@ -9,10 +9,16 @@ models.Base.metadata.create_all(bind=engine)
 # Initialize FastAPI app
 app = FastAPI()
 
-# ✅ Add CORS middleware
+# ✅ Define correct origins
+origins = [
+    "http://localhost:5173",       # Vite dev server
+    "https://zenifyai.vercel.app", # Production frontend
+]
+
+# ✅ Use origins variable properly here
 app.add_middleware(
     CORSMiddleware,
-   allow_origins=["http://localhost:3000", "http://localhost:3001", "https://zenifyai.vercel.app"],  # frontend URLs
+    allow_origins=origins,         # Fix this line
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
