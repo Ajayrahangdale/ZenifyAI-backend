@@ -5,15 +5,15 @@ from . import models, schemas, utils
 from .database import get_db
 
 # 👇 New Imports for AI
-import openai
+from openai import OpenAI  # ✅ Corrected import
 import os
 from dotenv import load_dotenv
 
 # Load environment variables
 load_dotenv()
 
-# Get API Key
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# ✅ OpenAI client setup
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 router = APIRouter()
 
@@ -26,17 +26,17 @@ class ChatRequest(BaseModel):
 async def chat_endpoint(request: ChatRequest):
     try:
         user_message = request.message
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": "You are ZenifyAI, a helpful and kind mental health assistant. You give empathetic and supportive advice."},
                 {"role": "user", "content": user_message}
             ]
         )
-        bot_reply = response['choices'][0]['message']['content']
+        bot_reply = response.choices[0].message.content
         return {"response": bot_reply}
     except Exception as e:
-        print("🔥 AI Error:", e)  # For debugging in terminal
+        print("🔥 AI Error:", e)
         return {"response": f"❌ AI Error: {str(e)}"}
 
 # ✅ User Registration

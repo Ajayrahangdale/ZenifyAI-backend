@@ -12,7 +12,7 @@ app = FastAPI()
 # ✅ Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://zenifyai.vercel.app"],  # frontend URLs
+   allow_origins=["http://localhost:3000", "http://localhost:3001", "https://zenifyai.vercel.app"],  # frontend URLs
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
